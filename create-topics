@@ -1,0 +1,21 @@
+#!/bin/sh
+
+
+for topic in $TOPICS;
+do
+    topicDescription=$(kafka-topics --zookeeper $ZOOKEEPER --describe --topic $topic)
+    if [ -z "$topicDescription" ]
+    then
+        echo "creating $topic"
+        kafka-topics --zookeeper $ZOOKEEPER \
+            --create \
+            --topic $topic \
+            --partitions $NUM_PARTITIONS \
+            --replication-factor $REPLICATION_FACTOR \
+            --config $CONFIG;
+    else
+        echo "$topic already exists"
+    fi
+done
+
+
